@@ -22,7 +22,7 @@ router = Router(name=__name__)
 
 async def conn_is_successful(ip: str, port: int = 22, username: str ="root") -> bool:
     try:
-        conn = await asyncssh.connect(ip, port=port, username=username, client_keys=[PATH_TO_CLIENT_KEYS])
+        conn = await asyncssh.connect(ip, port=port, username=username, client_keys=[PATH_TO_CLIENT_KEYS], known_hosts=None)
         conn.close()
         return True
     except (asyncssh.Error, OSError):
@@ -78,7 +78,7 @@ async def run_ssh_command_and_send_result_by_call(callback: CallbackQuery,
                                                   file_caption: str):
     try:
         async with asyncssh.connect(server_dict["ip"], port=server_dict["port"], username=server_dict["username"],
-                                    client_keys=[PATH_TO_CLIENT_KEYS]) as conn:
+                                    client_keys=[PATH_TO_CLIENT_KEYS], known_hosts=None) as conn:
             try:
                 result = await conn.run(f"{command}", check=True)
             except asyncssh.ProcessError as process_exc:
@@ -97,7 +97,7 @@ async def run_ssh_command_and_send_result_by_message(message: Message,
                                                   file_caption: str):
     try:
         async with asyncssh.connect(server_dict["ip"], port=server_dict["port"], username=server_dict["username"],
-                                    client_keys=[PATH_TO_CLIENT_KEYS]) as conn:
+                                    client_keys=[PATH_TO_CLIENT_KEYS], known_hosts=None) as conn:
             try:
                 result = await conn.run(command, check=True)
             except asyncssh.ProcessError as process_exc:
